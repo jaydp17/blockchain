@@ -89,7 +89,7 @@ server.get('/nodes/resolve', async (req, res, next) => {
   next();
 });
 
-const port = parseInt(process.env.PORT, 10) || 8080;
+const port = parseInt(process.env.PORT, 10) || 3000;
 server.listen(port, () => {
   console.log('%s listening at %s', server.name, server.url);
 });
