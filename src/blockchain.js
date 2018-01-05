@@ -1,4 +1,6 @@
-export default class BlockChain {
+const SHA256 = require('crypto-js/sha256');
+
+module.exports = class BlockChain {
   constructor() {
     this.chain = [];
     this.currentTransactions = [];
@@ -48,7 +50,12 @@ export default class BlockChain {
     return this.lastBlock.index + 1;
   }
 
-  static hash(block) {}
+  static hash(block) {
+    const msg = JSON.stringify(block);
+    return SHA256(msg).toString();
+  }
 
-  get lastBlock() {}
-}
+  get lastBlock() {
+    return this.chain[this.chain.length - 1];
+  }
+};
