@@ -1,9 +1,14 @@
 const restify = require('restify');
 const uuid4 = require('uuid4');
 const errs = require('restify-errors');
+const URL = require('url');
+
 const BlockChain = require('./blockchain');
+const Nodes = require('./nodes');
 
 const blockChain = new BlockChain();
+const nodes = new Nodes();
+
 const nodeName = uuid4();
 
 const server = restify.createServer({
@@ -55,6 +60,19 @@ server.get('/chain', (req, res, next) => {
     length: blockChain.chain.length,
   };
   res.send(response);
+  next();
+});
+
+server.post('/nodes/register', (req, res, next) => {
+  const { nodeUris } = req.body;
+  const hostNames = nodeUris.map(nodeUri => URL.parse(nodeUri).host);
+  for (const hostname of hostNames) {
+    nodes.addNode(hostname);
+  }
+  res.send({
+    message: 'New nodes have been added',
+    totalNodes: nodes.size,
+  });
   next();
 });
 
