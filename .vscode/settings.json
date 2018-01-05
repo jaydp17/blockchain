@@ -1,0 +1,15 @@
+{
+  // Place your settings in this file to overwrite default and user settings.
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/.DS_Store": true,
+    "**/.tmp": true,
+    "**/coverage": true,
+  },
+  "prettier.requireConfig": true,
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "files.insertFinalNewline": true
+}
