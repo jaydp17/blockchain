@@ -12,6 +12,8 @@
     "prettier": "^1.9.2"
   },
   "dependencies": {
-    "crypto-js": "^3.1.9-1"
+    "crypto-js": "^3.1.9-1",
+    "restify": "^6.3.4",
+    "uuid4": "^1.0.0"
   }
 }
