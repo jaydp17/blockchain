@@ -76,6 +76,19 @@ server.post('/nodes/register', (req, res, next) => {
   next();
 });
 
+server.get('/nodes/resolve', async (req, res, next) => {
+  const ourChain = blockChain.chain;
+  const { isReplaced, longestChain } = await nodes.getLongestChain(ourChain);
+  blockChain.chain = longestChain;
+
+  if (isReplaced) {
+    res.send({ message: 'Our chain was replaced', newChain: longestChain });
+  } else {
+    res.send({ message: 'Our chain is authoritative', chain: blockChain.chain });
+  }
+  next();
+});
+
 const port = parseInt(process.env.PORT, 10) || 8080;
 server.listen(port, () => {
   console.log('%s listening at %s', server.name, server.url);

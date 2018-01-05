@@ -26,20 +26,25 @@ module.exports = class Nodes {
    * Takes the currentChain and the chains from all other nodes
    * and finds the longest chain
    * @param {Array<Block>} currentChain The current block chain
-   * @return {Array<Block>} The longest chain
+   * @return {{isReplaced: boolean, longestChain: Array<Block>} The longest chain
    */
   async getLongestChain(currentChain) {
     const chains = await Promise.map(
       this.hostNames,
       async hostname => {
         const response = await axios.get(`http://${hostname}/chain`);
-        return response.data;
+        return response.data.chain;
       },
       { concurrency: 10 }
     );
-    return chains.reduce((longestChain, eachChain) => {
+    const longestChain = chains.reduce((longestChain, eachChain) => {
       if (longestChain.length > eachChain.length) return longestChain;
       return eachChain;
     }, currentChain);
+    return {
+      isReplaced:
+        currentChain[currentChain.length - 1].previousHash !== longestChain[longestChain.length - 1].previousHash,
+      longestChain,
+    };
   }
 };
