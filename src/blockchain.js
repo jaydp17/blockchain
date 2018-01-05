@@ -50,6 +50,30 @@ module.exports = class BlockChain {
     return this.lastBlock.index + 1;
   }
 
+  /**
+   * Uses a really simple Proof of Work Algorithm
+   * - p is the previous proof, and p' is the new proof
+   * - Find a number p' such that hash(pp') contains leading 4 zeroes, where p is the previous p'
+   *
+   * @param {number} lastProof Proof of the previous block
+   */
+  static calculateProof(lastProof) {
+    let proof = 0;
+    while (!BlockChain.validateProof(lastProof, proof)) proof++;
+    return proof;
+  }
+
+  /**
+   * Validates the Proof: Does hash(lastProof, currentProof) contain 4 leading zeroes?
+   * @param {number} lastProof
+   * @param {number} currentProof
+   * @returns {boolean} true if correct, false if not
+   */
+  static validateProof(lastProof, currentProof) {
+    const guess = SHA256(`${lastProof}${currentProof}`).toString();
+    return guess.slice(0, 4) === '0000';
+  }
+
   static hash(block) {
     const msg = JSON.stringify(block);
     return SHA256(msg).toString();
